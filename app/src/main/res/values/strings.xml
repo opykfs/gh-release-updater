@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 应用/导航 -->
+    <string name="app_name">GitHub 更新检测器</string>
+    <string name="title_tracking_list">GitHub 更新检测器</string>
+    <string name="title_add_tracking">添加追踪</string>
+    <string name="action_back">返回</string>
+    <string name="action_refresh">刷新</string>
+    <string name="action_add">添加追踪</string>
+
+    <!-- 主界面：状态/占位 -->
+    <string name="checking_all">正在检测更新…</string>
+    <string name="empty_title">暂无追踪</string>
+    <string name="empty_hint">点击右下角 + 添加第一个应用</string>
+    <string name="status_idle">未检测</string>
+    <string name="status_checking">检测中…</string>
+    <string name="status_up_to_date">已是最新</string>
+    <string name="status_up_to_date_with_tag">已是最新（%1$s）</string>
+    <string name="status_update_available">有新版本 %1$s</string>
+    <string name="status_skipped">已跳过版本 %1$s · 点卡片恢复提醒</string>
+    <string name="snackbar_skipped">已跳过版本 %1$s；想恢复提醒可点该卡片</string>
+    <string name="status_failed">检测失败：%1$s</string>
+    <string name="version_current">当前版本 %1$s</string>
+    <string name="download_in_progress">下载中…</string>
+    <string name="download_percent">%1$d%%</string>
+    <string name="last_check">最近检测：%1$s</string>
+    <string name="menu_item_delete">删除追踪</string>
+
+    <!-- 对话框：发现新版本 -->
+    <string name="dialog_update_title">发现新版本</string>
+    <string name="dialog_update_app">应用：%1$s</string>
+    <string name="dialog_update_current">当前版本：%1$s</string>
+    <string name="dialog_update_latest">最新版本：%1$s</string>
+    <string name="dialog_update_notes_title">更新说明</string>
+    <string name="action_download_update">下载更新</string>
+    <string name="action_later">暂不</string>
+    <string name="action_skip_version">跳过此版本</string>
+
+    <!-- 对话框：下载完成/安装确认 -->
+    <string name="dialog_install_title">下载完成</string>
+    <string name="dialog_install_message">版本 %1$s 已下载到本地。</string>
+    <string name="dialog_install_source">来源：GitHub Releases</string>
+    <string name="dialog_install_ask">是否现在安装？</string>
+    <string name="action_install">安装</string>
+    <string name="action_not_now">稍后</string>
+
+    <!-- 添加追踪界面 -->
+    <string name="label_select_app">选择已安装应用</string>
+    <string name="search_apps_hint">搜索应用名或包名</string>
+    <string name="installed_version">版本 %1$s</string>
+    <string name="label_repo">GitHub 仓库地址（owner/repo 或完整链接）</string>
+    <string name="repo_placeholder">例如：ReVanced/revanced-manager</string>
+    <string name="action_save_tracking">保存追踪</string>
+    <string name="saving_tracking">保存中…</string>
+    <string name="tracked_hint">已追踪</string>
+    <string name="empty_apps">未找到已安装的应用</string>
+    <string name="empty_search_result">没有匹配的应用</string>
+
+    <!-- 提示/错误（动态内容，经 ViewModel 从资源解析后展示） -->
+    <string name="error_repo_empty">请输入 GitHub 仓库地址</string>
+    <string name="error_repo_invalid">仓库地址格式错误，应为 owner/repo 或完整 GitHub 链接</string>
+    <string name="error_repo_not_github">仅支持 github.com 上的仓库链接</string>
+    <string name="error_select_app">请先选择一个已安装应用</string>
+    <string name="error_already_tracked">该应用已在追踪列表中</string>
+    <string name="status_no_apk">仓库 Release 无 APK 安装包，可手动再检</string>
+    <string name="error_download_start">下载启动失败，请稍后重试</string>
+    <string name="error_no_installer">未找到可用的安装程序</string>
+    <string name="error_install_failed">拉起系统安装器失败</string>
+    <string name="error_generic">发生错误，请重试</string>
+    <string name="snackbar_unknown_source">请先在系统设置中允许安装未知来源应用，再返回点击「安装」</string>
+    <string name="snackbar_deleted">已删除该追踪</string>
+</resources>

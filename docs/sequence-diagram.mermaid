@@ -1,0 +1,36 @@
+sequenceDiagram
+    autonumber
+    actor U as 用户
+    participant S as TrackingListScreen
+    participant VM as TrackingListViewModel
+    participant TR as TrackingRepository
+    participant RR as ReleaseRepository
+    participant GH as GitHub Releases API
+    participant VC as VersionComparator
+
+    U->>S: 打开 App（MainActivity→NavHost）
+    S->>VM: init/refreshAll()
+    VM->>VM: uiState=检查中(all items CHECKING)
+    VM->>TR: tracks.first()
+    TR-->>VM: List<TrackedApp>
+    loop 每个 track（并行 async）
+        VM->>RR: fetchLatest(track)
+        RR->>GH: GET /repos/{owner}/{repo}/releases/latest
+        alt 成功且存在 .apk asset
+            GH-->>RR: GitHubRelease(tag_name, assets[]…)
+            RR-->>VM: ReleaseInfo(tag, downloadUrl…)
+            VM->>VC: isUpdateAvailable(tag, localVersionName)
+            alt 有新版 且 tag!=skippedTag
+                VM->>VM: item=UPDATE_AVAILABLE(记录 newTag/说明/url)
+            else 相等或已跳过
+                VM->>VM: item=UP_TO_DATE
+            end
+        else HTTP 404 / 网络异常 / 限流
+            GH-->>RR: 4xx / 5xx / IOException
+            RR-->>VM: 抛中文错误
+            VM->>VM: item=FAILED(errorMessage)
+        end
+        VM->>TR: update(lastCheckTime, lastKnownLatestTag)
+    end
+    VM->>VM: 全部结束 → 若存在首个 UPDATE_AVAILABLE 项：activeUpdateDialog=该更新
+    VM-->>S: 刷新 UiState（状态徽标 / 弹「发现新版本」）

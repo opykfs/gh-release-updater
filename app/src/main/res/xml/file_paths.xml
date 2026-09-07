@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- FileProvider 对外路径：仅暴露应用专属外部目录下的 Download/ 子目录 -->
+<paths>
+    <external-files-path
+        name="downloads"
+        path="Download/" />
+</paths>

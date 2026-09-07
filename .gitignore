@@ -1,0 +1,30 @@
+# Gradle
+.gradle/
+build/
+
+# 本地发布产物（仅上传 GitHub Release，不提交仓库）
+dist/
+
+# Local configuration (SDK 路径等，勿提交)
+local.properties
+
+# Android Studio / IntelliJ IDEA
+.idea/
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+
+# 签名密钥（绝不提交）
+keystore/
+*.jks
+*.keystore
+keystore.properties
+
+# 系统/编辑器
+.DS_Store
+Thumbs.db
+*.log
+
+# 本工具项目数据（.workbuddy 非仓库内容）
+.workbuddy/

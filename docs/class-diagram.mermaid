@@ -1,0 +1,127 @@
+classDiagram
+    class TrackedApp {
+        +String packageName
+        +String repoOwner
+        +String repoName
+        +String appLabel
+        +String localVersionName
+        +Long localVersionCode
+        +Long addedAt
+        +Long? lastCheckTime
+        +String? lastKnownLatestTag
+        +String? skippedTag
+    }
+    class TrackedAppList {
+        +List~TrackedApp~ items
+    }
+    class InstalledApp {
+        +String packageName
+        +String appLabel
+        +String versionName
+        +Long versionCode
+    }
+    class GitHubRelease {
+        +String tagName
+        +String? name
+        +String? body
+        +String? publishedAt
+        +List~ReleaseAsset~ assets
+    }
+    class ReleaseAsset {
+        +String name
+        +String? browserDownloadUrl
+        +Long size
+        +String? contentType
+    }
+    class ReleaseInfo {
+        +String tag
+        +String? title
+        +String? notes
+        +String? downloadUrl
+        +String? fileName
+        +String? publishedAt
+    }
+    class UpdateStatus {
+        <<enumeration>>
+        IDLE
+        CHECKING
+        UP_TO_DATE
+        UPDATE_AVAILABLE
+        FAILED
+    }
+    class TrackingListViewModel {
+        +StateFlow~TrackingListUiState~ uiState
+        +refreshAll()
+        +onUpdateDownloadConfirmed(PendingUpdate)
+        +onInstallConfirmed(PendingInstall)
+        +onSkipVersion(PendingUpdate)
+        +onDelete(String)
+    }
+    class AddTrackingViewModel {
+        +StateFlow~AddTrackingUiState~ uiState
+        +save(onSaved)
+    }
+    class ReleaseRepository {
+        <<interface>>
+        +fetchLatest(TrackedApp) ReleaseInfo?
+    }
+    class DownloadRepository {
+        <<interface>>
+        +start(url, fileName) Long
+        +observe(id) Flow~DownloadState~
+    }
+    class InstallRepository {
+        <<interface>>
+        +isInstallAllowed() Boolean
+        +openUnknownSourceSettings()
+        +openInstaller(File)
+    }
+    class TrackingRepository {
+        <<interface>>
+        +tracks Flow~List~TrackedApp~~
+        +add(TrackedApp) Result~Unit~
+        +remove(String)
+        +update(TrackedApp)
+    }
+    class AppRepository {
+        <<interface>>
+        +getInstalledApps() List~InstalledApp~
+    }
+    class VersionComparator {
+        <<object>>
+        +compareVersions(a, b) Int
+        +isUpdateAvailable(tag, local) Boolean
+    }
+    class GitHubRepoParser {
+        <<object>>
+        +parse(input) ParseResult
+    }
+    class AppContainer {
+        +AppRepository appRepository
+        +TrackingRepository trackingRepository
+        +ReleaseRepository releaseRepository
+        +DownloadRepository downloadRepository
+        +InstallRepository installRepository
+    }
+
+    TrackedAppList "1" --> "*" TrackedApp
+    GitHubRelease "1" --> "*" ReleaseAsset
+    TrackingListViewModel --> ReleaseRepository
+    TrackingListViewModel --> DownloadRepository
+    TrackingListViewModel --> InstallRepository
+    TrackingListViewModel --> TrackingRepository
+    TrackingListViewModel ..> TrackedApp
+    TrackingListViewModel ..> ReleaseInfo
+    TrackingListViewModel ..> UpdateStatus
+    AddTrackingViewModel --> TrackingRepository
+    AddTrackingViewModel --> AppRepository
+    AddTrackingViewModel --> GitHubRepoParser
+    ReleaseRepository ..> GitHubRelease
+    ReleaseRepository ..> ReleaseInfo
+    ReleaseRepository ..> VersionComparator
+    TrackingListViewModel ..> VersionComparator
+    AppContainer --> AppRepository
+    AppContainer --> TrackingRepository
+    AppContainer --> ReleaseRepository
+    AppContainer --> DownloadRepository
+    AppContainer --> InstallRepository

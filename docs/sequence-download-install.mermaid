@@ -1,0 +1,42 @@
+sequenceDiagram
+    autonumber
+    actor U as 用户
+    participant S as TrackingListScreen
+    participant VM as TrackingListViewModel
+    participant DR as DownloadRepository
+    participant DM as DownloadManager
+    participant IR as InstallRepository
+    participant FP as FileProvider
+
+    U->>S: 点「下载更新」
+    S->>VM: onUpdateDownloadConfirmed(PendingUpdate)
+    VM->>DR: start(url, fileName)
+    DR->>DM: enqueue(Request)
+    DM-->>DR: downloadId
+    DR-->>VM: downloadId
+    VM->>VM: activeUpdateDialog=null; item 显示"下载中 xx%"
+    VM->>DR: observe(downloadId)
+    DR->>DM: 轮询 query(下载进度/广播 ACTION_DOWNLOAD_COMPLETE)
+    loop 下载中
+        DM-->>DR: bytes/total
+        DR-->>VM: DownloadState.Running(p,t)
+        VM-->>S: 进度条/百分比
+    end
+    DM-->>DR: 完成广播(SUCCESSFUL)
+    DR-->>VM: DownloadState.Completed(file)
+    VM->>VM: activeInstallDialog=PendingInstall(version, fileUri)
+    VM-->>S: 弹「下载完成」
+    U->>S: 点「安装」
+    S->>VM: onInstallConfirmed(PendingInstall)
+    VM->>IR: isInstallAllowed()
+    alt 未授权未知来源
+        VM->>IR: openUnknownSourceSettings()
+        VM-->>S: snackbar"请允许安装未知应用后重试"
+    else 已授权
+        VM->>IR: openInstaller(file)
+        IR->>FP: getUriForFile(file)
+        FP-->>IR: content://…/downloads/xxx.apk
+        IR->>IR: Intent(ACTION_VIEW, uri, type=apk) + FLAG_GRANT_READ_URI_PERMISSION
+        IR->>Android: startActivity(系统安装器)
+    end
+    U->>S: 点「稍后」 → onDismissInstallDialog()（不触发任何安装）
